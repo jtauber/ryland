@@ -1,4 +1,5 @@
 from hashlib import md5
+import json
 from os import makedirs
 from shutil import copy, copytree, rmtree
 
@@ -15,6 +16,7 @@ class Ryland:
         self.jinja_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(template_dir)
         )
+        self.jinja_env.globals["data"] = load_data
         self.jinja_env.filters["markdown"] = markdown_filter
 
     def clear_dist(self):
@@ -58,3 +60,8 @@ def make_hash(path):
 
 def markdown_filter(text):
     return markdown.markdown(text, extensions=["fenced_code", "codehilite", "tables"])
+
+
+def load_data(filename):
+    if filename.endswith(".json"):
+        return json.load(open(filename))

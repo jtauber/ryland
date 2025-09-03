@@ -5,7 +5,7 @@ A simple static site generation library
 
 ## Current Features
 
-- Jinja2 templates and a basic markdown filter
+- Jinja2 templates with a basic markdown filter and a function to pull data directly from JSON files
 - copying static files and directory trees (for stylesheets, scripts, fonts, images)
 - cache-busting with hashes
 
@@ -13,6 +13,12 @@ A simple static site generation library
 ## History
 
 I've generally found most static site generation libraries to either be far too complex for my needs or be too restricted to just blogs so, over the years, I've generated many static sites with lightweight, bespoke Python code and hosted them on GitHub pages. However, I've ended up repeating myself a lot so I'm now cleaning it all up and generalizing my prior work as this library.
+
+
+## Changelog
+
+- 0.1.0 initial release
+- 0.2.0 added the `data` function with support for JSON
 
 
 ## Example Usage
@@ -60,21 +66,40 @@ in the templates.
 
 To render a markdown context variable:
 
-```
+```html
 {{ content | markdown }}
+```
+
+
+## Data Function
+
+To pull data directly from a JSON file in a template:
+
+```html
+<div>
+  <h2>Latest News</h2>
+
+  {% for news_item in data("news_list.json")[:3] %}
+    <div>
+      <div class="news-dateline">{{ news_item.dateline }}</div>
+      <p>{{ news_item.content }}</p>
+    </div>
+  {% endfor %}
+</div>
 ```
 
 ## Sites Currently Using Ryland
 
 - <https://projectamaze.com>
+- <https://digitaltolkien.com>
 
 
 ## Roadmap
 
 - move over other sites to use Ryland
 - incorporate more common elements that emerge
+- add support for YAML data loading in templates
 - produce a Ryland-generated website for Ryland
 - document how to automatically build with GitHub actions
 - write up a cookbook
-- add a command-line too for starting a Ryland-based site
-
+- add a command-line tool for starting a Ryland-based site
