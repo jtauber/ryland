@@ -14,6 +14,9 @@ dependencies = [
     "pyyaml>=6.0.2",
 ]
 
+[project.urls]
+github = "https://github.com/jtauber/ryland"
+
 [build-system]
 requires = ["uv_build>=0.8.14,<0.9.0"]
 build-backend = "uv_build"
