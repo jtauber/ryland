@@ -1,14 +1,16 @@
 from hashlib import md5
 import json
 from os import makedirs
+from pathlib import Path
 from shutil import copy, copytree, rmtree
+from typing import Any, Optional
 
 import jinja2
 import markdown
 
 
 class Ryland:
-    def __init__(self, dist_dir, template_dir):
+    def __init__(self, dist_dir: Path, template_dir: Path):
         self.dist_dir = dist_dir
         self.template_dir = template_dir
         self.hashes = {}
@@ -19,24 +21,26 @@ class Ryland:
         self.jinja_env.globals["data"] = load_data
         self.jinja_env.filters["markdown"] = markdown_filter
 
-    def clear_dist(self):
+    def clear_dist(self) -> None:
         for child in self.dist_dir.iterdir():
             if child.is_dir():
                 rmtree(child)
             else:
                 child.unlink()
 
-    def copy_to_dist(self, source):
+    def copy_to_dist(self, source: Path) -> None:
         if source.is_dir():
             dest = self.dist_dir / source.name
             copytree(source, dest, dirs_exist_ok=True)
         else:
             copy(source, self.dist_dir / source.name)
 
-    def calc_hash(self, filename):
+    def calc_hash(self, filename: str) -> None:
         self.hashes[filename] = make_hash(self.dist_dir / filename)
 
-    def render_template(self, template_name, output_filename, context=None):
+    def render_template(
+        self, template_name: str, output_filename: str, context: Optional[dict] = None
+    ) -> None:
         context = context or {}
         template = self.jinja_env.get_template(template_name)
         output_path = self.dist_dir / output_filename
@@ -52,16 +56,16 @@ class Ryland:
             )
 
 
-def make_hash(path):
+def make_hash(path) -> str:
     hasher = md5()
     hasher.update(path.read_bytes())
     return hasher.hexdigest()
 
 
-def markdown_filter(text):
+def markdown_filter(text) -> str:
     return markdown.markdown(text, extensions=["fenced_code", "codehilite", "tables"])
 
 
-def load_data(filename):
+def load_data(filename) -> Any:
     if filename.endswith(".json"):
         return json.load(open(filename))
