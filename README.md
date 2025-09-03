@@ -17,9 +17,9 @@ I've generally found most static site generation libraries to either be far too 
 
 ## Example Usage
 
-For now, clone this repo and use as an editable requirement.
+`pip install ryland` (or equivalent).
 
-Write a build script of the following form:
+The write a build script of the following form:
 
 ```python
 from ryland import Ryland
