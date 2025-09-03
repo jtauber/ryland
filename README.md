@@ -76,3 +76,5 @@ To render a markdown context variable:
 - produce a Ryland-generated website for Ryland
 - document how to automatically build with GitHub actions
 - write up a cookbook
+- add a command-line too for starting a Ryland-based site
+
