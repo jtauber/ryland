@@ -7,16 +7,15 @@ import markdown
 
 
 class Ryland:
-
     def __init__(self, dist_dir, template_dir):
         self.dist_dir = dist_dir
         self.template_dir = template_dir
         self.hashes = {}
 
         self.jinja_env = jinja2.Environment(
-            loader=jinja2.FileSystemLoader(template_dir))
+            loader=jinja2.FileSystemLoader(template_dir)
+        )
         self.jinja_env.filters["markdown"] = markdown_filter
-
 
     def clear_dist(self):
         for child in self.dist_dir.iterdir():
@@ -24,7 +23,7 @@ class Ryland:
                 rmtree(child)
             else:
                 child.unlink()
-    
+
     def copy_to_dist(self, source):
         if source.is_dir():
             dest = self.dist_dir / source.name
@@ -41,10 +40,14 @@ class Ryland:
         output_path = self.dist_dir / output_filename
         makedirs(output_path.parent, exist_ok=True)
         with open(output_path, "w") as f:
-            f.write(template.render({
-                "HASHES": self.hashes,
-                **context,
-            }))
+            f.write(
+                template.render(
+                    {
+                        "HASHES": self.hashes,
+                        **context,
+                    }
+                )
+            )
 
 
 def make_hash(path):
@@ -54,5 +57,4 @@ def make_hash(path):
 
 
 def markdown_filter(text):
-    return markdown.markdown(
-        text, extensions=["fenced_code", "codehilite", "tables"])
+    return markdown.markdown(text, extensions=["fenced_code", "codehilite", "tables"])
