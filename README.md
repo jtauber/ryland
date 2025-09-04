@@ -17,8 +17,20 @@ I've generally found most static site generation libraries to either be far too 
 
 ## Changelog
 
-- 0.1.0 initial release
-- 0.2.0 added the `data` function with support for JSON
+### 0.1.0
+
+- initial release
+
+### 0.2.0
+
+- added the `data` function with support for JSON
+
+### 0.3.0
+
+- changed `dist` to `output`
+- changed `calc_hash` to `add_hash`
+- support just passing in `__file__` and assuming `output_dir` and `template_dir`
+- added an example
 
 
 ## Example Usage
@@ -31,15 +43,15 @@ The write a build script of the following form:
 from ryland import Ryland
 
 ROOT_DIR = Path(__file__).parent.parent
-DIST_DIR = ROOT_DIR / "dist"
+OUTPUT_DIR = ROOT_DIR / "output"
 PANTRY_DIR = ROOT_DIR / "pantry"
 TEMPLATE_DIR = ROOT_DIR / "templates"
 
-ryland = Ryland(dist_dir=DIST_DIR, template_dir=TEMPLATE_DIR)
+ryland = Ryland(output_dir=OUTPUT_DIR, template_dir=TEMPLATE_DIR)
 
-ryland.clear_dist()
-ryland.copy_to_dist(PANTRY_DIR / "style.css")
-ryland.calc_hash("style.css")
+ryland.clear_output()
+ryland.copy_to_output(PANTRY_DIR / "style.css")
+ryland.add_hash("style.css")
 
 ryland.render_template("404.html", "404.html")
 ryland.render_template("about_us.html", "about-us/index.html")
@@ -51,15 +63,18 @@ ryland.render_template("homepage.html", "index.html", {
 })
 ```
 
+Also see `examples/` in this repo.
+
+
 ## Cache-Busting Hashes
 
-The `calc_hash` makes it possible to do
+The `add_hash` makes it possible to do
 
 ```html
 <link rel="stylesheet" href="/style.css?{{ HASHES['style.css'] }}">
 ```
 
-in the templates.
+in the templates to bust the browser cache when a change is made to a stylesheet, script, etc.
 
 
 ## Markdown Filter
@@ -96,9 +111,12 @@ To pull data directly from a JSON file in a template:
 
 ## Roadmap
 
+In no particular order:
+
 - move over other sites to use Ryland
 - incorporate more common elements that emerge
 - add support for YAML data loading in templates
+- improve error handling
 - produce a Ryland-generated website for Ryland
 - document how to automatically build with GitHub actions
 - write up a cookbook

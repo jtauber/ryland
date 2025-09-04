@@ -10,9 +10,27 @@ import markdown
 
 
 class Ryland:
-    def __init__(self, dist_dir: Path, template_dir: Path):
-        self.dist_dir = dist_dir
+    def __init__(
+        self,
+        root_file: Optional[str] = None,
+        output_dir: Optional[Path] = None,
+        template_dir: Optional[Path] = None,
+    ):
+        if output_dir is None:
+            if root_file is not None:
+                output_dir = Path(root_file).parent / "output"
+            else:
+                raise ValueError("root_file must be provided if output_dir is not")
+
+        if template_dir is None:
+            if root_file is not None:
+                template_dir = Path(root_file).parent / "templates"
+            else:
+                raise ValueError("root_file must be provided if template_dir is not")
+
+        self.output_dir = output_dir
         self.template_dir = template_dir
+
         self.hashes = {}
 
         self.jinja_env = jinja2.Environment(
@@ -21,29 +39,29 @@ class Ryland:
         self.jinja_env.globals["data"] = load_data
         self.jinja_env.filters["markdown"] = markdown_filter
 
-    def clear_dist(self) -> None:
-        for child in self.dist_dir.iterdir():
+    def clear_output(self) -> None:
+        for child in self.output_dir.iterdir():
             if child.is_dir():
                 rmtree(child)
             else:
                 child.unlink()
 
-    def copy_to_dist(self, source: Path) -> None:
+    def copy_to_output(self, source: Path) -> None:
         if source.is_dir():
-            dest = self.dist_dir / source.name
+            dest = self.output_dir / source.name
             copytree(source, dest, dirs_exist_ok=True)
         else:
-            copy(source, self.dist_dir / source.name)
+            copy(source, self.output_dir / source.name)
 
-    def calc_hash(self, filename: str) -> None:
-        self.hashes[filename] = make_hash(self.dist_dir / filename)
+    def add_hash(self, filename: str) -> None:
+        self.hashes[filename] = make_hash(self.output_dir / filename)
 
     def render_template(
         self, template_name: str, output_filename: str, context: Optional[dict] = None
     ) -> None:
         context = context or {}
         template = self.jinja_env.get_template(template_name)
-        output_path = self.dist_dir / output_filename
+        output_path = self.output_dir / output_filename
         makedirs(output_path.parent, exist_ok=True)
         with open(output_path, "w") as f:
             f.write(
