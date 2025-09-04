@@ -32,6 +32,11 @@ I've generally found most static site generation libraries to either be far too 
 - support just passing in `__file__` and assuming `output_dir` and `template_dir`
 - added an example
 
+### 0.4.0
+
+- `clear_output` will create the directory if it doesn't exist
+- added another example
+
 
 ## Example Usage
 

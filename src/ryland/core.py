@@ -40,6 +40,7 @@ class Ryland:
         self.jinja_env.filters["markdown"] = markdown_filter
 
     def clear_output(self) -> None:
+        makedirs(self.output_dir, exist_ok=True)
         for child in self.output_dir.iterdir():
             if child.is_dir():
                 rmtree(child)
