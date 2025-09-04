@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Example 03{% endblock %}
+
+{% block content %}
+  <h1>Welcome to Example 03</h1>
+
+  {% for post in posts %}
+    <article>
+      <h2>{{ post.title }}</h2>
+      <p>{{ post.content|markdown }}</p>
+    </article>
+  {% endfor %}
+{% endblock %}
