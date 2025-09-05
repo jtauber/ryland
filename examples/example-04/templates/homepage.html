@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Example 04{% endblock %}
+
+{% block content %}
+  <h1>Welcome to Example 04</h1>
+
+  {% for post in data("data/posts.json") %}
+    <article>
+      <h2>{{ post.title }}</h2>
+      <p>{{ post.content|markdown }}</p>
+    </article>
+  {% endfor %}
+{% endblock %}
