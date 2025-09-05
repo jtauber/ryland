@@ -7,6 +7,7 @@ from typing import Any, Optional
 
 import jinja2
 import markdown
+import yaml
 
 
 class Ryland:
@@ -88,3 +89,5 @@ def markdown_filter(text) -> str:
 def load_data(filename) -> Any:
     if filename.endswith(".json"):
         return json.load(open(filename))
+    elif filename.endswith((".yml", ".yaml")):
+        return yaml.safe_load(open(filename))
