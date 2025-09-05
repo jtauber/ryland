@@ -37,6 +37,12 @@ I've generally found most static site generation libraries to either be far too 
 - `clear_output` will create the directory if it doesn't exist
 - added another example
 
+### 0.5.0
+
+- added `strftime` filter
+- include `markdown-full-yaml-metadata`
+- added a third example
+
 
 ## Example Usage
 
