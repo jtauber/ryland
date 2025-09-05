@@ -103,15 +103,6 @@ To render a markdown context variable:
 ```
 
 
-## `strftime` Filter
-
-To format a datetime:
-
-```html
-{{ meta.date | strftime('%B %-d, %Y') }}
-```
-
-
 ## Data Function
 
 To pull data directly from a JSON file in a template:
@@ -133,6 +124,7 @@ To pull data directly from a JSON file in a template:
 
 - <https://projectamaze.com>
 - <https://digitaltolkien.com>
+- <https://jktauber.com>
 
 
 ## Roadmap
