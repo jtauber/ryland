@@ -38,6 +38,7 @@ class Ryland:
         )
         self.jinja_env.globals["data"] = load_data
         self.jinja_env.filters["markdown"] = markdown_filter
+        self.jinja_env.filters["strftime"] = strftime_filter
 
     def clear_output(self) -> None:
         makedirs(self.output_dir, exist_ok=True)
@@ -83,6 +84,10 @@ def make_hash(path) -> str:
 
 def markdown_filter(text) -> str:
     return markdown.markdown(text, extensions=["fenced_code", "codehilite", "tables"])
+
+
+def strftime_filter(date, format="%Y-%m-%d") -> str:
+    return date.strftime(format)
 
 
 def load_data(filename) -> Any:
