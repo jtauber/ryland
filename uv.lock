@@ -24,6 +24,19 @@ wheels = [
 ]
 
 [[package]]
+name = "markdown-full-yaml-metadata"
+version = "2.2.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "markdown" },
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/9d/ee/3bddb4995861ea2f884178adbbd605d1f7b8a88856aaf981210fc4877a32/markdown_full_yaml_metadata-2.2.1.tar.gz", hash = "sha256:fe5255ba5c8e25454d61f348a6f909a5335f38af281e84ae8f71664aee63451b", size = 4038, upload-time = "2023-01-08T23:25:51.97Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ab/1a/63742bfc3a4567deaf0ac9438df1564441962f84da8b9eb123c4ff91b01c/markdown_full_yaml_metadata-2.2.1-py3-none-any.whl", hash = "sha256:24efececbe660b9acc79558094ae7cbd0da7748bb7799449c57b9f1a1830c76c", size = 3801, upload-time = "2023-01-08T23:25:50.963Z" },
+]
+
+[[package]]
 name = "markupsafe"
 version = "3.0.2"
 source = { registry = "https://pypi.org/simple" }
@@ -115,11 +128,12 @@ wheels = [
 
 [[package]]
 name = "ryland"
-version = "0.2.0"
+version = "0.4.0"
 source = { editable = "." }
 dependencies = [
     { name = "jinja2" },
     { name = "markdown" },
+    { name = "markdown-full-yaml-metadata" },
     { name = "pyyaml" },
 ]
 
@@ -133,6 +147,7 @@ dev = [
 requires-dist = [
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "markdown", specifier = ">=3.8.2" },
+    { name = "markdown-full-yaml-metadata", specifier = ">=2.2.1" },
     { name = "pyyaml", specifier = ">=6.0.2" },
 ]
 

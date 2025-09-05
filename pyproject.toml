@@ -11,6 +11,7 @@ requires-python = ">=3.12"
 dependencies = [
     "jinja2>=3.1.6",
     "markdown>=3.8.2",
+    "markdown-full-yaml-metadata>=2.2.1",
     "pyyaml>=6.0.2",
 ]
 
