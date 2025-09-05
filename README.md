@@ -19,40 +19,7 @@ I've generally found most static site generators to either be far too complex fo
 
 ## Changelog
 
-### 0.1.0
-
-- initial release
-
-### 0.2.0
-
-- added the `data` function with support for JSON
-
-### 0.3.0
-
-- changed `dist` to `output`
-- changed `calc_hash` to `add_hash`
-- support just passing in `__file__` and assuming `output_dir` and `template_dir`
-- added an example
-
-### 0.4.0
-
-- `clear_output` will create the directory if it doesn't exist
-- added another example
-
-### 0.5.0
-
-- added `strftime` filter
-- include `markdown-full-yaml-metadata`
-- added a third example
-
-### 0.6.0
-
-- removed `strftime` filter (can just use `.strftime` instead)
-
-### 0.7.0
-
-- data function now supports YAML
-- added two examples of the `data` function
+Now see `CHANGELOG.md`
 
 
 ## Example Usage
