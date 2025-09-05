@@ -5,14 +5,16 @@ A simple static site generation library
 
 ## Current Features
 
-- Jinja2 templates with a basic markdown filter and a function to pull data directly from JSON files
-- copying static files and directory trees (for stylesheets, scripts, fonts, images)
+- use of Jinja2 templates
+- markdown and datetime formatting filters
+- pull data directly from JSON files within templates
+- copy static files and directory trees (for stylesheets, scripts, fonts, images)
 - cache-busting with hashes
 
 
 ## History
 
-I've generally found most static site generation libraries to either be far too complex for my needs or be too restricted to just blogs so, over the years, I've generated many static sites with lightweight, bespoke Python code and hosted them on GitHub pages. However, I've ended up repeating myself a lot so I'm now cleaning it all up and generalizing my prior work as this library.
+I've generally found most static site generators to either be far too complex for my needs or too restricted to just blogs so, over the years, I've generated many static sites with lightweight, bespoke Python code and hosted them on GitHub pages. However, I've ended up repeating myself a lot so I'm now cleaning it all up and generalizing my prior work as this library.
 
 
 ## Changelog
@@ -88,12 +90,21 @@ The `add_hash` makes it possible to do
 in the templates to bust the browser cache when a change is made to a stylesheet, script, etc.
 
 
-## Markdown Filter
+## `markdown` Filter
 
 To render a markdown context variable:
 
 ```html
 {{ content | markdown }}
+```
+
+
+## `strftime` Filter
+
+To format a datetime:
+
+```html
+{{ meta.date | strftime('%B %-d, %Y') }}
 ```
 
 
