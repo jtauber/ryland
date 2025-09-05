@@ -7,14 +7,14 @@ A simple static site generation library
 
 - use of Jinja2 templates
 - markdown formatting filter
-- pull data directly from JSON files within templates
+- pull data directly from JSON or YAML files within templates
 - copy static files and directory trees (for stylesheets, scripts, fonts, images)
 - cache-busting with hashes
 
 
 ## History
 
-I've generally found most static site generators to either be far too complex for my needs or too restricted to just blogs so, over the years, I've generated many static sites with lightweight, bespoke Python code and hosted them on GitHub pages. However, I've ended up repeating myself a lot so I'm now cleaning it all up and generalizing my prior work as this library.
+I've generally found most static site generators to either be far too complex for my needs or too restricted to just blogs or similar so, over the years, I've generated many static sites with lightweight, bespoke Python code and hosted them on GitHub pages. However, I've ended up repeating myself a lot so I'm now cleaning it all up and generalizing my prior work as this library.
 
 
 ## Changelog
@@ -48,6 +48,11 @@ I've generally found most static site generators to either be far too complex fo
 ### 0.6.0
 
 - removed `strftime` filter (can just use `.strftime` instead)
+
+### 0.7.0
+
+- data function now supports YAML
+- added two examples of the `data` function
 
 
 ## Example Usage
@@ -105,7 +110,7 @@ To render a markdown context variable:
 
 ## Data Function
 
-To pull data directly from a JSON file in a template:
+To pull data directly from a JSON or YAML file in a template:
 
 ```html
 <div>
@@ -133,9 +138,13 @@ In no particular order:
 
 - move over other sites to use Ryland
 - incorporate more common elements that emerge
-- add support for YAML data loading in templates
 - improve error handling
 - produce a Ryland-generated website for Ryland
 - document how to automatically build with GitHub actions
 - write up a cookbook
 - add a command-line tool for starting a Ryland-based site
+
+Because Ryland is a library, a lot of missing features can just be implemented by the site developer.
+However, if three or more sites duplicate effort in their build script, I'll consider at least adding helper code to Ryland.
+
+Once five independent people are running sites built with Ryland, I will declare 1.0.0.
