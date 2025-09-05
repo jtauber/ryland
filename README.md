@@ -6,7 +6,7 @@ A simple static site generation library
 ## Current Features
 
 - use of Jinja2 templates
-- markdown and datetime formatting filters
+- markdown formatting filter
 - pull data directly from JSON files within templates
 - copy static files and directory trees (for stylesheets, scripts, fonts, images)
 - cache-busting with hashes
@@ -44,6 +44,10 @@ I've generally found most static site generators to either be far too complex fo
 - added `strftime` filter
 - include `markdown-full-yaml-metadata`
 - added a third example
+
+### 0.6.0
+
+- removed `strftime` filter (can just use `.strftime` instead)
 
 
 ## Example Usage
