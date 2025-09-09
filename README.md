@@ -26,7 +26,7 @@ Now see `CHANGELOG.md`
 
 `pip install ryland` (or equivalent).
 
-The write a build script of the following form:
+Then write a build script of the following form:
 
 ```python
 from ryland import Ryland
