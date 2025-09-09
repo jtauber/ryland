@@ -79,6 +79,18 @@ class Ryland:
                 )
             )
 
+    def render_markdown(self, markdown_file: Path, template_name: str) -> None:
+        html_content = self.markdown.convert(markdown_file.read_text())
+        file_path = f"{markdown_file.stem}/index.html"
+
+        self.render_template(
+            template_name,
+            file_path,
+            {
+                "content": html_content,
+            },
+        )
+
 
 def make_hash(path) -> str:
     hasher = md5()
