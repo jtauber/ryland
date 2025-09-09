@@ -34,11 +34,15 @@ class Ryland:
 
         self.hashes = {}
 
+        self.markdown = markdown.Markdown(
+            extensions=["fenced_code", "codehilite", "tables"]
+        )
+
         self.jinja_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(template_dir)
         )
         self.jinja_env.globals["data"] = load_data
-        self.jinja_env.filters["markdown"] = markdown_filter
+        self.jinja_env.filters["markdown"] = self.markdown.convert
 
     def clear_output(self) -> None:
         makedirs(self.output_dir, exist_ok=True)
@@ -80,10 +84,6 @@ def make_hash(path) -> str:
     hasher = md5()
     hasher.update(path.read_bytes())
     return hasher.hexdigest()
-
-
-def markdown_filter(text) -> str:
-    return markdown.markdown(text, extensions=["fenced_code", "codehilite", "tables"])
 
 
 def load_data(filename) -> Any:
