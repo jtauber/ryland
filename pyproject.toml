@@ -10,7 +10,7 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "jinja2>=3.1.6",
-    "markdown>=3.8.2",
+    "markdown>=3.9",
     "markdown-full-yaml-metadata>=2.2.1",
     "pyyaml>=6.0.2",
 ]
@@ -24,6 +24,6 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
-    "ruff>=0.12.11",
+    "ruff>=0.12.12",
     "ty>=0.0.1a20",
 ]
