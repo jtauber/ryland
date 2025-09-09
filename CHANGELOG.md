@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0
+
+- added `render_markdown` method
+- added example
+- upgraded to `markdown>=3.9`
+
 ## 0.7.0
 
 - `data` function now supports YAML
