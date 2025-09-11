@@ -1,6 +1,6 @@
 [project]
 name = "ryland"
-version = "0.8.0"
+version = "0.9.0"
 description = "A simple static site generation library"
 readme = "README.md"
 license = "MIT"
