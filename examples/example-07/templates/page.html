@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}{{ frontmatter.title }} | Example 07{% endblock %}
+
+{% block content %}
+  <h1>{{ frontmatter.title }}</h1>
+
+  {{ content }}
+{% endblock %}

@@ -6,7 +6,7 @@ A simple static site generation library
 ## Current Features
 
 - use of Jinja2 templates
-- render page-level markdown
+- render page-level markdown including frontmatter support
 - render markdown within data using filter
 - pull data directly from JSON or YAML files within templates
 - copy static files and directory trees (for stylesheets, scripts, fonts, images)
@@ -79,7 +79,14 @@ The `add_hash` makes it possible to do
 in the templates to bust the browser cache when a change is made to a stylesheet, script, etc.
 
 
-## `markdown` Filter
+## Render Markdown Method
+
+`ryland.render_markdown` takes a `Path` to a Markdown file and a template name.
+
+The Markdown is rendered to HTML and passed to the template as `content`. The YAML frontmatter (if it exists) is passed to the template as `frontmatter`.
+
+
+## Markdown Filter
 
 To render a markdown context variable:
 
@@ -119,6 +126,8 @@ Here's an example of the latter:
 
 In no particular order:
 
+- helpers for pagination
+- ability to pass in a function to dynamically generate output filename
 - move over other sites to use Ryland
 - incorporate more common elements that emerge
 - improve error handling

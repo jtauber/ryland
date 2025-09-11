@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.0
+
+- `render_markdown` now supports YAML frontmatter
+- added example
+
 ## 0.8.0
 
 - added `render_markdown` method

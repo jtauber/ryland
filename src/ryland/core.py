@@ -35,7 +35,7 @@ class Ryland:
         self.hashes = {}
 
         self.markdown = markdown.Markdown(
-            extensions=["fenced_code", "codehilite", "tables"]
+            extensions=["fenced_code", "codehilite", "tables", "full_yaml_metadata"]
         )
 
         self.jinja_env = jinja2.Environment(
@@ -81,12 +81,18 @@ class Ryland:
 
     def render_markdown(self, markdown_file: Path, template_name: str) -> None:
         html_content = self.markdown.convert(markdown_file.read_text())
+        if hasattr(self.markdown, "Meta"):
+            frontmatter = self.markdown.Meta  # type: ignore
+        else:
+            frontmatter = {}
+        self.markdown.reset()
         file_path = f"{markdown_file.stem}/index.html"
 
         self.render_template(
             template_name,
             file_path,
             {
+                "frontmatter": frontmatter,
                 "content": html_content,
             },
         )
