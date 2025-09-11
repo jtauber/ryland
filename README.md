@@ -112,6 +112,7 @@ Here's an example of the latter:
 - <https://projectamaze.com>
 - <https://digitaltolkien.com>
 - <https://jktauber.com>
+- <https://cite.digitaltolkien.com>
 
 
 ## Roadmap
