@@ -6,3 +6,4 @@
 (cd example-04 && ./build.py)
 (cd example-05 && ./build.py)
 (cd example-06 && ./build.py)
+(cd example-07 && ./build.py)
