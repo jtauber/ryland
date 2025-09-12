@@ -65,6 +65,20 @@ for page_file in PAGES_DIR.glob("*.md"):
     ryland.render_markdown(page_file, "page.html")
 ```
 
+or, for more control, context transformations (or "tubes") can be explicitly connected together:
+
+```python
+for page_file in sorted(PAGES_DIR.glob("*.md")):
+    ryland.render(
+        path(page_file),
+        load(),
+        markdown(frontmatter=True),
+        {"url": f"/{page_file.stem}/"},
+        collect_tags,
+        {"template_name": "page.html"},
+    )
+```
+
 Also see `examples/` in this repo.
 
 
@@ -113,6 +127,81 @@ Here's an example of the latter:
   {% endfor %}
 </div>
 ```
+
+
+## Tubes
+
+A "tube" is a function that takes a context dictionary and returns a new one while also being able to access the Ryland instance.
+
+Built-in tubes in `ryland.tubes` include the follow:
+
+- `load(source_path: Path)` loads the given path and puts it on the context as `source_path` and the contents as `source_content`.
+- `markdown(frontmatter=False)` converts the Markdown in `source_content` to HTML and puts it in `content`. Optionally puts the YAML frontmatter in `frontmatter`
+- `debug(pretty=True)` outputs the context at that point to stderr (by default pretty-printing it)
+- `project(keys: list[str])` keeps only the listed keys in the context
+
+Developers can write their own tubes, for example here to collect pages by tag:
+
+```python
+tags = defaultdict(list)
+
+def collect_tags():
+    def inner(ryland: Ryland, context: dict) -> dict:
+        frontmatter = context["frontmatter"]
+        for tag in frontmatter.get("tags", []):
+            tags[tag].append(
+                ryland.process(
+                    context,
+                    project(["frontmatter", "url"]),
+                )
+            )
+        return context
+    return inner
+```
+
+This builds up a dictionary `tags` which, for each tag, contains a list of contexts containing the frontmatter and url for each page with that tag in its frontmatter.
+
+## Process Method 
+
+The `ryland.process` method takes a series of dictionaries and tubes and builds up a new context.
+
+## Render Method
+
+The `ryland.render` method processes a series of dictionary and tubes and then uses the resultant context to render a template. The template name is given by `template_name` in the context and the output path is determined by the `url` in the context.
+
+For example:
+
+```python
+for tag in tags:
+    ryland.render(
+        {
+            "tag": tag,
+            "pages": tags[tag],
+            "url": f"/tag/{tag}/",
+            "template_name": "tag.html",
+        },
+    )
+```
+
+## The Get Context Helper
+
+`ryland.helpers.get_context` allows the retrieval of values from a context using dotted path notation and with defaulting.
+
+For example, in 
+
+```python
+for page_file in sorted(PAGES_DIR.glob("*.md")):
+    ryland.render(
+        load(page_file),
+        markdown(frontmatter=True),
+        {"url": get_context("frontmatter.url", f"/{page_file.stem}/")},
+        collect_tags(),
+        {"template_name": get_context("frontmatter.template_name", "page.html")},
+    )
+```
+
+the `url` and `template_name` can be overridden in the page's frontmatter.
+
 
 ## Sites Currently Using Ryland
 
