@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}{{ frontmatter.title }} | Example 09{% endblock %}
+
+{% block content %}
+
+  <p>Alternative template!</p>
+
+  <h1>{{ frontmatter.title }}</h1>
+
+  {{ content }}
+
+  {% include "_tags.html" %}
+{% endblock %}

@@ -1,0 +1,7 @@
+{% if frontmatter.tags %}
+  <div class="tags">
+    {% for tag in frontmatter.tags %}
+      <a href="/tag/{{ tag }}/">{{ tag }}</a>
+    {% endfor %}
+  </div>
+{% endif %}

@@ -8,3 +8,4 @@
 (cd example-06 && ./build.py)
 (cd example-07 && ./build.py)
 (cd example-08 && ./build.py)
+(cd example-09 && ./build.py)
