@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Dict, Any
 from ryland import Ryland
 from ryland.helpers import get_context
-from ryland.tubes import path, load, markdown, project, debug
+from ryland.tubes import path, load, markdown, project
 
 
 PANTRY_DIR = Path(__file__).parent / "pantry"
