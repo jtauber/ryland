@@ -11,6 +11,7 @@ A simple static site generation library
 - pull data directly from JSON or YAML files within templates
 - copy static files and directory trees (for stylesheets, scripts, fonts, images)
 - generate hash for cache-busting
+- built-in and custom compositional context transformations ("tubes") including ability to calculate some context variables from others
 
 
 ## History
@@ -65,16 +66,15 @@ for page_file in PAGES_DIR.glob("*.md"):
     ryland.render_markdown(page_file, "page.html")
 ```
 
-or, for more control, context transformations (or "tubes") can be explicitly connected together:
+or, for more control, context transformations (or "tubes") can be explicitly composed together:
 
 ```python
 for page_file in sorted(PAGES_DIR.glob("*.md")):
     ryland.render(
-        path(page_file),
-        load(),
+        load(page_file),
         markdown(frontmatter=True),
         {"url": f"/{page_file.stem}/"},
-        collect_tags,
+        collect_tags(),
         {"template_name": "page.html"},
     )
 ```
