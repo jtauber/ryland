@@ -6,8 +6,10 @@ from shutil import copy, copytree, rmtree
 from typing import Any, Optional
 
 import jinja2
-import markdown
+import markdown as markdown_lib
 import yaml
+
+from .tubes import *
 
 
 class Ryland:
@@ -34,7 +36,7 @@ class Ryland:
 
         self.hashes = {}
 
-        self.markdown = markdown.Markdown(
+        self._markdown = markdown_lib.Markdown(
             extensions=["fenced_code", "codehilite", "tables", "full_yaml_metadata"]
         )
 
@@ -42,7 +44,7 @@ class Ryland:
             loader=jinja2.FileSystemLoader(template_dir)
         )
         self.jinja_env.globals["data"] = load_data
-        self.jinja_env.filters["markdown"] = self.markdown.convert
+        self.jinja_env.filters["markdown"] = self._markdown.convert
 
     def clear_output(self) -> None:
         makedirs(self.output_dir, exist_ok=True)
@@ -79,23 +81,13 @@ class Ryland:
                 )
             )
 
-    def render_markdown(self, markdown_file: Path, template_name: str) -> None:
-        html_content = self.markdown.convert(markdown_file.read_text())
-        if hasattr(self.markdown, "Meta"):
-            frontmatter = self.markdown.Meta  # type: ignore
-        else:
-            frontmatter = {}
-        self.markdown.reset()
-        file_path = f"{markdown_file.stem}/index.html"
+    def render_pipeline(self, template_name: str, output_filename: str, pipeline: Tube) -> None:
+        self.render_template(template_name, output_filename, pipeline.context(self))
 
-        self.render_template(
-            template_name,
-            file_path,
-            {
-                "frontmatter": frontmatter,
-                "content": html_content,
-            },
-        )
+    def render_markdown(self, markdown_file: Path, template_name: str) -> None:
+        file_path = f"{markdown_file.stem}/index.html"
+        context = (path(markdown_file) | load | markdown(frontmatter=True)).context(self)
+        self.render_template(template_name, file_path, context)
 
 
 def make_hash(path) -> str:
