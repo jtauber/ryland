@@ -13,22 +13,14 @@ def project(keys: list[str]):
     return inner
 
 
-def path(source_path: Path):
+def load(source_path: Path):
     def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
         return {
-            **(context or {}),
+            **context,
             "source_path": source_path,
+            "source_content": source_path.read_text(),
         }
-
     return inner
-
-
-def load():
-    return {
-        "source_content": lambda context: get_context("source_path")(
-            context
-        ).read_text(),
-    }
 
 
 def markdown(frontmatter=False):

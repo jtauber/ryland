@@ -9,7 +9,7 @@ import jinja2
 import markdown as markdown_lib
 import yaml
 
-from .tubes import *
+from .tubes import load, markdown
 
 
 class Ryland:
@@ -109,7 +109,7 @@ class Ryland:
         self.render_template(
             template_name,
             file_path,
-            self.process(path(markdown_file), load(), markdown(frontmatter=True)),
+            self.process(load(markdown_file), markdown(frontmatter=True)),
         )
 
 

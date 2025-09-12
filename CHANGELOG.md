@@ -5,7 +5,7 @@
 - implemented new "tubes" approach where context transformations can be chained together
 - added `process` method to execute tubes
 - added `render` method to process tubes to get a context for template rendering and output
-- initial tubes in `ryland.tubes`: `project`, `path`, `load`, `markdown`, `debug`
+- initial tubes in `ryland.tubes`: `project`, `load`, `markdown`, `debug`
 - added helped function `get_context` for retrieving from context with dotted path notation and defaults
 - added two more examples using all the above to support tagging and frontmatter-overriding of template and url
 

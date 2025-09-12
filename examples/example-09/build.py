@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Dict, Any
 from ryland import Ryland
 from ryland.helpers import get_context
-from ryland.tubes import path, load, markdown, project
+from ryland.tubes import load, markdown, project
 
 
 PANTRY_DIR = Path(__file__).parent / "pantry"
@@ -34,8 +34,7 @@ def collect_tags(ryland: Ryland, context: Dict[str, Any]) -> Dict[str, Any]:
 
 for page_file in sorted(PAGES_DIR.glob("*.md")):
     ryland.render(
-        path(page_file),
-        load(),
+        load(page_file),
         markdown(frontmatter=True),
         {"url": get_context("frontmatter.url", f"/{page_file.stem}/")},
         collect_tags,
