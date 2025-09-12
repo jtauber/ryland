@@ -216,7 +216,6 @@ the `url` and `template_name` can be overridden in the page's frontmatter.
 In no particular order:
 
 - helpers for pagination
-- ability to pass in a function to dynamically generate output filename
 - move over other sites to use Ryland
 - incorporate more common elements that emerge
 - improve error handling
