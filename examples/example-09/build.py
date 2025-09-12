@@ -40,7 +40,6 @@ for page_file in sorted(PAGES_DIR.glob("*.md")):
         {"url": get_context("frontmatter.url", f"/{page_file.stem}/")},
         collect_tags,
         {"template_name": get_context("frontmatter.template_name", "page.html")},
-        debug(),
     )
 
 
