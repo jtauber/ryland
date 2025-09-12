@@ -20,6 +20,7 @@ def load(source_path: Path):
             "source_path": source_path,
             "source_content": source_path.read_text(),
         }
+
     return inner
 
 

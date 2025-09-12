@@ -30,6 +30,7 @@ def collect_tags():
                 )
             )
         return context
+
     return inner
 
 
