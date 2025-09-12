@@ -6,7 +6,9 @@ class Tube:
         self.func = func
 
     def __or__(self, other):
-        return Tube(lambda ryland, context: other.func(ryland, self.func(ryland, context)))
+        return Tube(
+            lambda ryland, context: other.func(ryland, self.func(ryland, context))
+        )
 
     def __ror__(self, other: dict):
         return Tube(lambda ryland, context: self.func(ryland, {**other, **context}))
@@ -37,12 +39,24 @@ def path(source_path: Path):
     return Tube(inner)
 
 
-@tube
-def load(_, context: dict) -> dict:
-    return {
-        **context,
-        "source_content": context["source_path"].read_text(),
+def calc_context(calculations: dict):
+    def inner(_, context: dict) -> dict:
+        result = {}
+        for key, func in calculations.items():
+            result[key] = func(context)
+        return {
+            **context,
+            **result,
+        }
+
+    return Tube(inner)
+
+
+load = calc_context(
+    {
+        "source_content": lambda context: context["source_path"].read_text(),
     }
+)
 
 
 def markdown(frontmatter=False):
