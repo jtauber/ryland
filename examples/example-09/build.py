@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 from pathlib import Path
+from typing import Dict, Any
 from ryland import Ryland
 from ryland.helpers import get_context
 from ryland.tubes import path, load, markdown, project, debug
@@ -20,9 +21,8 @@ PAGES_DIR = Path(__file__).parent / "pages"
 tags = defaultdict(list)
 
 
-def collect_tags(ryland: Ryland, context: dict) -> dict:
-    frontmatter = context["frontmatter"]
-    for tag in frontmatter.get("tags", []):
+def collect_tags(ryland: Ryland, context: Dict[str, Any]) -> Dict[str, Any]:
+    for tag in get_context("frontmatter.tags", [])(context):
         tags[tag].append(
             ryland.process(
                 context,
