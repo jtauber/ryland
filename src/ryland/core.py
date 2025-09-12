@@ -81,17 +81,30 @@ class Ryland:
                 )
             )
 
-    def render_pipeline(
-        self, template_name: str, output_filename: str, pipeline: Tube
-    ) -> None:
-        self.render_template(template_name, output_filename, pipeline.context(self))
+    def process(self, *tubes) -> dict:
+        context = {}
+        for tube in tubes:
+            if isinstance(tube, dict):
+                context = {**context, **tube}
+            else:
+                context = tube(self, context)
+        return context
+
+    def render_tubes(self, *tubes) -> None:
+        context = self.process(*tubes)
+        template_name = context["template_name"]
+        output_filename = context["url"].lstrip("/")
+        if output_filename.endswith("/"):
+            output_filename += "index.html"
+        self.render_template(template_name, output_filename, context)
 
     def render_markdown(self, markdown_file: Path, template_name: str) -> None:
         file_path = f"{markdown_file.stem}/index.html"
-        context = (path(markdown_file) | load | markdown(frontmatter=True)).context(
-            self
+        self.render_template(
+            template_name,
+            file_path,
+            self.process(path(markdown_file), load(), markdown(frontmatter=True)),
         )
-        self.render_template(template_name, file_path, context)
 
 
 def make_hash(path) -> str:

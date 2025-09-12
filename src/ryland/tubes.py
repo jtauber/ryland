@@ -1,31 +1,11 @@
 from pathlib import Path
 
 
-class Tube:
-    def __init__(self, func):
-        self.func = func
-
-    def __or__(self, other):
-        return Tube(
-            lambda ryland, context: other.func(ryland, self.func(ryland, context))
-        )
-
-    def __ror__(self, other: dict):
-        return Tube(lambda ryland, context: self.func(ryland, {**other, **context}))
-
-    def context(self, ryland):
-        return self.func(ryland, {})
-
-
-def tube(func):
-    return Tube(func)
-
-
 def project(keys: list):
     def inner(_, context: dict) -> dict:
         return {k: context[k] for k in keys}
 
-    return Tube(inner)
+    return inner
 
 
 def path(source_path: Path):
@@ -36,7 +16,7 @@ def path(source_path: Path):
             "source_path": source_path,
         }
 
-    return Tube(inner)
+    return inner
 
 
 def calc_context(calculations: dict):
@@ -49,10 +29,10 @@ def calc_context(calculations: dict):
             **result,
         }
 
-    return Tube(inner)
+    return inner
 
 
-load = calc_context(
+load = lambda: calc_context(
     {
         "source_content": lambda context: context["source_path"].read_text(),
     }
@@ -76,4 +56,4 @@ def markdown(frontmatter=False):
             "content": html_content,
         }
 
-    return Tube(inner)
+    return inner

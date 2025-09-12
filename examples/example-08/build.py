@@ -3,7 +3,7 @@
 from collections import defaultdict
 from pathlib import Path
 from ryland import Ryland
-from ryland.tubes import tube, calc_context, path, load, markdown, project
+from ryland.tubes import calc_context, path, load, markdown, project
 
 
 PANTRY_DIR = Path(__file__).parent / "pantry"
@@ -16,42 +16,38 @@ ryland.add_hash("style.css")
 PAGES_DIR = Path(__file__).parent / "pages"
 
 
-calc_url = calc_context(
-    {
-        "url": lambda context: f"/{context['source_path'].stem}/",
-    }
-)
-
-
 tags = defaultdict(list)
 
 
-@tube
-def collect_tags(_: Ryland, context: dict) -> dict:
+def collect_tags(ryland: Ryland, context: dict) -> dict:
     frontmatter = context["frontmatter"]
     for tag in frontmatter.get("tags", []):
         tags[tag].append(
-            (context | project(["frontmatter", "source_path"]) | calc_url).context(
-                ryland
+            ryland.process(
+                context,
+                project(["frontmatter", "url"]),
             )
         )
     return context
 
 
 for page_file in sorted(PAGES_DIR.glob("*.md")):
-    ryland.render_pipeline(
-        "page.html",
-        f"{page_file.stem}/index.html",
-        (path(page_file) | load | markdown(frontmatter=True) | collect_tags),
+    ryland.render_tubes(
+        path(page_file),
+        load(),
+        markdown(frontmatter=True),
+        {"url": f"/{page_file.stem}/"},
+        collect_tags,
+        {"template_name": "page.html"},
     )
 
 
-for tag, pages in tags.items():
-    ryland.render_pipeline(
-        "tag.html",
-        f"tag/{tag}/index.html",
-        (
-            {"tag": tag, "pages": pages}
-            | calc_context({"url": lambda context: f"/tag/{context['tag']}/"})
-        ),
+for tag in tags:
+    ryland.render_tubes(
+        {
+            "tag": tag,
+            "pages": tags[tag],
+            "url": f"/tag/{tag}/",
+            "template_name": "tag.html",
+        },
     )
