@@ -1,4 +1,6 @@
 from pathlib import Path
+from pprint import pprint
+from sys import stderr
 from typing import Dict, Any
 
 from .helpers import get_context
@@ -45,5 +47,16 @@ def markdown(frontmatter=False):
             **extra,
             "content": html_content,
         }
+
+    return inner
+
+
+def debug(pretty=True):
+    def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
+        if pretty:
+            pprint(context, stream=stderr)
+        else:
+            print(context, file=stderr)
+        return context
 
     return inner
