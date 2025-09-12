@@ -21,15 +21,17 @@ PAGES_DIR = Path(__file__).parent / "pages"
 tags = defaultdict(list)
 
 
-def collect_tags(ryland: Ryland, context: Dict[str, Any]) -> Dict[str, Any]:
-    for tag in get_context("frontmatter.tags", [])(context):
-        tags[tag].append(
-            ryland.process(
-                context,
-                project(["frontmatter", "url"]),
+def collect_tags():
+    def inner(ryland: Ryland, context: Dict[str, Any]) -> Dict[str, Any]:
+        for tag in get_context("frontmatter.tags", [])(context):
+            tags[tag].append(
+                ryland.process(
+                    context,
+                    project(["frontmatter", "url"]),
+                )
             )
-        )
-    return context
+        return context
+    return inner
 
 
 for page_file in sorted(PAGES_DIR.glob("*.md")):
@@ -37,7 +39,7 @@ for page_file in sorted(PAGES_DIR.glob("*.md")):
         load(page_file),
         markdown(frontmatter=True),
         {"url": get_context("frontmatter.url", f"/{page_file.stem}/")},
-        collect_tags,
+        collect_tags(),
         {"template_name": get_context("frontmatter.template_name", "page.html")},
     )
 
