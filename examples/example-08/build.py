@@ -32,7 +32,7 @@ def collect_tags(ryland: Ryland, context: dict) -> dict:
 
 
 for page_file in sorted(PAGES_DIR.glob("*.md")):
-    ryland.render_tubes(
+    ryland.render(
         path(page_file),
         load(),
         markdown(frontmatter=True),
@@ -43,7 +43,7 @@ for page_file in sorted(PAGES_DIR.glob("*.md")):
 
 
 for tag in tags:
-    ryland.render_tubes(
+    ryland.render(
         {
             "tag": tag,
             "pages": tags[tag],

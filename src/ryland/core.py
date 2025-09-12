@@ -90,7 +90,7 @@ class Ryland:
                 context = tube(self, context)
         return context
 
-    def render_tubes(self, *tubes) -> None:
+    def render(self, *tubes) -> None:
         context = self.process(*tubes)
         template_name = context["template_name"]
         output_filename = context["url"].lstrip("/")
