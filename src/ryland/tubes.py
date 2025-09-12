@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Dict, Any
 
+from .helpers import get_context
+
 
 def project(keys: list[str]):
     def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -19,25 +21,12 @@ def path(source_path: Path):
     return inner
 
 
-def calc_context(calculations: dict):
-    def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
-        result = {}
-        for key, func in calculations.items():
-            result[key] = func(context)
-        return {
-            **context,
-            **result,
-        }
-
-    return inner
-
-
 def load():
-    return calc_context(
-        {
-            "source_content": lambda context: context["source_path"].read_text(),
-        }
-    )
+    return {
+        "source_content": lambda context: get_context("source_path")(
+            context
+        ).read_text(),
+    }
 
 
 def markdown(frontmatter=False):

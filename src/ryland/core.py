@@ -85,7 +85,13 @@ class Ryland:
         context = {}
         for tube in tubes:
             if isinstance(tube, dict):
-                context = {**context, **tube}
+                context = {
+                    **context,
+                    **{
+                        key: value(context) if callable(value) else value
+                        for key, value in tube.items()
+                    },
+                }
             else:
                 context = tube(self, context)
         return context
