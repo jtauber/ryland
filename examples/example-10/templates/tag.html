@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Pages tagged {{ tag }} | Example 10{% endblock %}
+
+{% block content %}
+  <h1>Pages tagged {{ tag }}</h1>
+
+  {% if pages %}
+    {% for page in pages %}
+      <h2><a href="{{ page.url }}">{{ page.frontmatter.title }}</a></h2>
+      <div>{{ page.excerpt }}</div>
+    {% endfor %}
+  {% else %}
+    <p>No pages.</p>
+  {% endif %}
+
+{% endblock %}
