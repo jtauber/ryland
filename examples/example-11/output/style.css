@@ -1,0 +1,33 @@
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  padding: 1rem;
+  max-width: 42rem;
+  margin: auto;
+}
+
+h2 {
+  margin-block-end: 0;
+}
+
+.tags > a {
+  display: inline-block;
+  background-color: #eef;
+  color: #006;
+  text-decoration: none;
+  padding: 0.2rem 0.5rem;
+  margin: 0.1rem;
+  border-radius: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.tags > a:hover {
+  background-color: #006;
+  color: #eef;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between
+}
+

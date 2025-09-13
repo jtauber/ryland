@@ -1,0 +1,7 @@
+{% if tags %}
+  <div class="tags">
+    {% for tag_detail in tags %}
+      <a href="{{ calc_url(tag_detail) }}">{{ tag_detail.tag }}</a>
+    {% endfor %}
+  </div>
+{% endif %}
