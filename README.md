@@ -276,6 +276,11 @@ the `url` and `template_name` can be overridden in the page's frontmatter.
 - <https://cite.digitaltolkien.com>
 
 
+## Other Projects Building on Ryland
+
+- coming soon
+
+
 ## Roadmap
 
 In no particular order:
