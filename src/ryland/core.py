@@ -18,6 +18,7 @@ class Ryland:
         root_file: Optional[str] = None,
         output_dir: Optional[Path] = None,
         template_dir: Optional[Path] = None,
+        url_root: Optional[str] = None,
     ):
         if output_dir is None:
             if root_file is not None:
@@ -33,6 +34,7 @@ class Ryland:
 
         self.output_dir = output_dir
         self.template_dir = template_dir
+        self.url_root = url_root or "/"
 
         self.hashes = {}
 
@@ -44,6 +46,7 @@ class Ryland:
             loader=jinja2.FileSystemLoader(template_dir)
         )
         self.jinja_env.globals["data"] = load_data
+        self.jinja_env.globals["calc_url"] = self.calc_url
         self.jinja_env.filters["markdown"] = self._markdown.convert
 
     def clear_output(self) -> None:
@@ -60,6 +63,17 @@ class Ryland:
             copytree(source, dest, dirs_exist_ok=True)
         else:
             copy(source, self.output_dir / source.name)
+
+    def calc_url(self, arg: dict|str) -> str:
+        if isinstance(arg, dict):
+            url = arg.get("url", "")
+        else:
+            url = arg
+
+        if url in self.hashes:
+            url = f"{url}?{self.hashes[url]}"
+
+        return self.url_root + url.lstrip("/")
 
     def add_hash(self, filename: str) -> None:
         self.hashes[filename] = make_hash(self.output_dir / filename)
