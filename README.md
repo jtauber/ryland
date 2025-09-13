@@ -73,6 +73,7 @@ for page_file in sorted(PAGES_DIR.glob("*.md")):
     ryland.render(
         load(page_file),
         markdown(frontmatter=True),
+        excerpt(),
         {"url": f"/{page_file.stem}/"},
         collect_tags(),
         {"template_name": "page.html"},
@@ -98,6 +99,36 @@ in the templates to bust the browser cache when a change is made to a stylesheet
 `ryland.render_markdown` takes a `Path` to a Markdown file and a template name.
 
 The Markdown is rendered to HTML and passed to the template as `content`. The YAML frontmatter (if it exists) is passed to the template as `frontmatter`.
+
+Under the covers, this is just a `render` call with a pre-defined set of tubes (see below) but is handy for just rendering a Markdown file to HTML with Jinja2 templating.
+
+
+## Paginated Method
+
+`ryland.paginated` takes a list of contexts and added a `next` and `prev` to each of them.
+
+For example:
+
+```python
+>>> ryland.paginated([{"post": "foo"}, {"post": "bar"}])
+[{'post': 'foo', 'prev': None, 'next': {'post': 'bar'}}, {'post': 'bar', 'prev': {'post': 'foo'}, 'next': None}]
+```
+
+or, to give a real-world example:
+
+```python
+posts = [
+    ryland.process(
+        load(post_file),
+        markdown(frontmatter=True),
+        {"url": f"/{post_file.stem}/"},
+    )
+    for post_file in sorted(POSTS_DIR.glob("*.md"))
+]
+
+for post in ryland.paginated(posts):
+    ryland.render(post, {"template_name": "post.html"})
+```
 
 
 ## Markdown Filter
@@ -133,33 +164,34 @@ Here's an example of the latter:
 
 A "tube" is a function that takes a context dictionary and returns a new one while also being able to access the Ryland instance.
 
-Built-in tubes in `ryland.tubes` include the follow:
+Built-in tube factories in `ryland.tubes` include the follow:
 
 - `load(source_path: Path)` loads the given path and puts it on the context as `source_path` and the contents as `source_content`.
-- `markdown(frontmatter=False)` converts the Markdown in `source_content` to HTML and puts it in `content`. Optionally puts the YAML frontmatter in `frontmatter`
-- `debug(pretty=True)` outputs the context at that point to stderr (by default pretty-printing it)
-- `project(keys: list[str])` keeps only the listed keys in the context
+- `markdown(frontmatter=False)` converts the Markdown in `source_content` to HTML and puts it in `content`. Optionally puts the YAML frontmatter in `frontmatter`.
+- `excerpt()` extracts the first paragraph of `content` and puts it in `excerpt`.
+- `debug(pretty=True)` outputs the context at that point to stderr (by default pretty-printing it).
+- `project(keys: list[str])` keeps only the listed keys in the context.
 
-Developers can write their own tubes, for example here to collect pages by tag:
+Developers can write their own tubes or tube factories, for example here to collect pages by tag:
 
 ```python
 tags = defaultdict(list)
 
 def collect_tags():
-    def inner(ryland: Ryland, context: dict) -> dict:
+    def tube(ryland: Ryland, context: Dict[str, Any]) -> Dict[str, Any]:
         frontmatter = context["frontmatter"]
         for tag in frontmatter.get("tags", []):
             tags[tag].append(
                 ryland.process(
                     context,
-                    project(["frontmatter", "url"]),
+                    project(["frontmatter", "url", "excerpt"]),
                 )
             )
         return context
-    return inner
+    return tube
 ```
 
-This builds up a dictionary `tags` which, for each tag, contains a list of contexts containing the frontmatter and url for each page with that tag in its frontmatter.
+This builds up a dictionary `tags` which, for each tag, contains a list of contexts containing the frontmatter, url, and excerpt for each page with that tag in its frontmatter.
 
 ## Process Method 
 
@@ -194,6 +226,7 @@ for page_file in sorted(PAGES_DIR.glob("*.md")):
     ryland.render(
         load(page_file),
         markdown(frontmatter=True),
+        excerpt(),
         {"url": get_context("frontmatter.url", f"/{page_file.stem}/")},
         collect_tags(),
         {"template_name": get_context("frontmatter.template_name", "page.html")},
@@ -215,7 +248,6 @@ the `url` and `template_name` can be overridden in the page's frontmatter.
 
 In no particular order:
 
-- helpers for pagination
 - move over other sites to use Ryland
 - incorporate more common elements that emerge
 - improve error handling
