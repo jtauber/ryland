@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.0
+
+- added `excerpt` tube factory to extract the first paragraph of a page
+- added `paginated` method that decorates a list of page contexts with next/prev
+
 ## 0.10.0
 
 - implemented new "tubes" approach where context transformations can be chained together
