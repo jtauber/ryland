@@ -105,12 +105,23 @@ class Ryland:
         self.render_template(template_name, output_filename, context)
 
     def render_markdown(self, markdown_file: Path, template_name: str) -> None:
-        file_path = f"{markdown_file.stem}/index.html"
-        self.render_template(
-            template_name,
-            file_path,
-            self.process(load(markdown_file), markdown(frontmatter=True)),
+        self.render(
+            load(markdown_file),
+            markdown(frontmatter=True),
+            {"url": f"/{markdown_file.stem}/", "template_name": template_name},
         )
+
+    def paginated(self, items: list[dict]) -> list[dict]:
+        return [
+            self.process(
+                items[i],
+                {
+                    "prev": items[i - 1] if i > 0 else None,
+                    "next": items[i + 1] if i < len(items) - 1 else None,
+                },
+            )
+            for i in range(len(items))
+        ]
 
 
 def make_hash(path) -> str:
