@@ -1,6 +1,6 @@
-# Example 09
+# Example 10
 
-This example is similar to Example 08 but supports overriding the template and the url in the frontmatter.
+This example is similar to Example 08 but demonstrates the use of excerpts and pagination.
 
 ```sh
 # in a virtual env with Ryland installed
