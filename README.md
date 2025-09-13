@@ -198,7 +198,7 @@ A "tube" is a function that takes a context dictionary and returns a new one whi
 
 Built-in tube factories in `ryland.tubes` include the follow:
 
-- `load(source_path: Path)` loads the given path and puts it on the context as `source_path` and the contents as `source_content`.
+- `load(source_path: Path)` loads the given path and puts it on the context as `source_path`, the last modified datetime as `source_modified`, and the contents as `source_content`.
 - `markdown(frontmatter=False)` converts the Markdown in `source_content` to HTML and puts it in `content`. Optionally puts the YAML frontmatter in `frontmatter`.
 - `excerpt()` extracts the first paragraph of `content` and puts it in `excerpt`.
 - `debug(pretty=True)` outputs the context at that point to stderr (by default pretty-printing it).
@@ -268,6 +268,14 @@ for page_file in sorted(PAGES_DIR.glob("*.md")):
 the `url` and `template_name` can be overridden in the page's frontmatter.
 
 
+## Load Global Method
+
+If you have a file that contains information that should be available in every template (such as site information) you can load it with `load_global`:
+
+```python
+ryland.load_global("site", "site_info.yaml")
+```
+
 ## Sites Currently Using Ryland
 
 - <https://projectamaze.com>
@@ -278,7 +286,7 @@ the `url` and `template_name` can be overridden in the page's frontmatter.
 
 ## Other Projects Building on Ryland
 
-- coming soon
+- <https://github.com/jtauber/ryland-blog-template>
 
 
 ## Roadmap

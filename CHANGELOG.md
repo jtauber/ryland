@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.13.0
+
+- `load` tube now sets `source_modified` with the last modified date of the file
+- `Ryland.load_global` can be used to load a context from a file that will be included in all templates
+
 ## 0.12.0
 
 - Ryland can be configured with a `url_root` for generation at something other than `/`

@@ -36,7 +36,9 @@ class Ryland:
         self.template_dir = template_dir
         self.url_root = url_root or "/"
 
-        self.hashes = {}
+        self.global_context = {
+            "HASHES": {},
+        }
 
         self._markdown = markdown_lib.Markdown(
             extensions=["fenced_code", "codehilite", "tables", "full_yaml_metadata"]
@@ -70,13 +72,13 @@ class Ryland:
         else:
             url = arg
 
-        if url in self.hashes:
-            url = f"{url}?{self.hashes[url]}"
+        if url in self.global_context["HASHES"]:
+            url = f"{url}?{self.global_context['HASHES'][url]}"
 
         return self.url_root + url.lstrip("/")
 
     def add_hash(self, filename: str) -> None:
-        self.hashes[filename] = make_hash(self.output_dir / filename)
+        self.global_context["HASHES"][filename] = make_hash(self.output_dir / filename)
 
     def render_template(
         self, template_name: str, output_filename: str, context: Optional[dict] = None
@@ -89,7 +91,7 @@ class Ryland:
             f.write(
                 template.render(
                     {
-                        "HASHES": self.hashes,
+                        **self.global_context,
                         **context,
                     }
                 )
@@ -141,6 +143,9 @@ class Ryland:
             )
             for i in range(len(items))
         ]
+
+    def load_global(self, key: str, filename: str) -> None:
+        self.global_context[key] = load_data(filename)
 
 
 def make_hash(path) -> str:

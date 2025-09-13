@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from pprint import pprint
 from re import search, DOTALL
@@ -27,6 +28,7 @@ def load(source_path: Path) -> Tube:
             **context,
             "source_path": source_path,
             "source_content": source_path.read_text(),
+            "source_modified": datetime.fromtimestamp(source_path.stat().st_mtime),
         }
 
     return inner
