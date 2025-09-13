@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.0
+
+- Ryland can be configured with a `url_root` for generation at something other than `/`
+- added `calc_url` function that uses `url_root`, automatically adds the cache-busting hash, and optionally takes an context with a `url` value
+- added new example (which also changes the way tags are done to take advantage of `calc_url`)
+
 ## 0.11.0
 
 - added `excerpt` tube factory to extract the first paragraph of a page

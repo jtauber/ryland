@@ -83,6 +83,19 @@ for page_file in sorted(PAGES_DIR.glob("*.md")):
 Also see `examples/` in this repo.
 
 
+## Alternative Initialization
+
+If your output directory is `./output/` and your template directory is `./templates/` (relative to the build script), you can just initialize with:
+
+```python
+ryland = Ryland(__file__)
+```
+
+`Ryland` also takes a `url_root` if the generated site will live somewhere other than directly under `/`.
+
+The `calc_url` function (below) can be helpful in constructing urls that honour this.
+
+
 ## Cache-Busting Hashes
 
 The `add_hash` makes it possible to do
@@ -92,6 +105,12 @@ The `add_hash` makes it possible to do
 ```
 
 in the templates to bust the browser cache when a change is made to a stylesheet, script, etc.
+
+Note that `calc_url` (see below) will automatically add the hash if one exists, so the following is equivalent:
+
+```html
+<link rel="stylesheet" href="{{ calc_url('style.css') }}">
+```
 
 
 ## Render Markdown Method
@@ -140,6 +159,17 @@ To render a markdown context variable:
 ```html
 {{ content | markdown }}
 ```
+
+
+## Calc URL Function
+
+The template function `calc_url` will honour the `url_root` and will automatically add the cache-busting hash if one exists.
+
+So if the `url_root` is `/my-site/` and `style.css` has been hashed, then `{{ calc_url('style.css') }}` will be expanded to `/my-site/style.css?HASH`.
+
+If `calc_url` is given a context (dictionary) rather than a string, the `url` value will be used. This enables things like
+
+`<a href="{{ calc_url(page) }}">` if, for example, `page` is the context for the page being linked to.
 
 
 ## Data Function
