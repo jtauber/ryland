@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from .core import Ryland
 
 
-Tube: TypeAlias = Callable[['Ryland', Dict[str, Any]], Dict[str, Any]]
+Tube: TypeAlias = Callable[["Ryland", Dict[str, Any]], Dict[str, Any]]
 
 
 def project(keys: list[str]) -> Tube:
