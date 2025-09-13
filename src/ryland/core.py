@@ -9,7 +9,7 @@ import jinja2
 import markdown as markdown_lib
 import yaml
 
-from .tubes import load, markdown
+from .tubes import load, markdown, project
 
 
 class Ryland:
@@ -111,13 +111,16 @@ class Ryland:
             {"url": f"/{markdown_file.stem}/", "template_name": template_name},
         )
 
-    def paginated(self, items: list[dict]) -> list[dict]:
+    def paginated(self, items: list[dict], fields: Optional[list[str]] = None) -> list[dict]:
+        def _project(item):
+            return project(fields)(self, item) if fields else item
+
         return [
             self.process(
                 items[i],
                 {
-                    "prev": items[i - 1] if i > 0 else None,
-                    "next": items[i + 1] if i < len(items) - 1 else None,
+                    "prev": _project(items[i - 1]) if i > 0 else None,
+                    "next": _project(items[i + 1]) if i < len(items) - 1 else None,
                 },
             )
             for i in range(len(items))

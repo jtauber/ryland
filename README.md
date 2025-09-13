@@ -122,13 +122,15 @@ posts = [
         load(post_file),
         markdown(frontmatter=True),
         {"url": f"/{post_file.stem}/"},
+        {"template_name": "post.html"},
     )
     for post_file in sorted(POSTS_DIR.glob("*.md"))
 ]
-
-for post in ryland.paginated(posts):
-    ryland.render(post, {"template_name": "post.html"})
+for post in ryland.paginated(posts, fields=["url", "frontmatter"]):
+    ryland.render(post)
 ```
+
+`ryland.paginated` takes an optional `fields` parameter to project which context variables are included in `next` and `prev`.
 
 
 ## Markdown Filter
