@@ -1,5 +1,6 @@
 from pathlib import Path
 from pprint import pprint
+from re import search, DOTALL
 from sys import stderr
 from typing import Dict, Any, Callable, TypeAlias, TYPE_CHECKING
 
@@ -57,6 +58,16 @@ def debug(pretty: bool = True) -> Tube:
             pprint(context, stream=stderr)
         else:
             print(context, file=stderr)
+        return context
+
+    return inner
+
+
+def excerpt() -> Tube:
+    def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
+        content = get_context("content", "")(context)
+        match = search("<p>(.*?)</p>", str(content), DOTALL)
+        context["excerpt"] = match.group(1) if match else ""
         return context
 
     return inner
