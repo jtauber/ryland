@@ -4,6 +4,7 @@
 
 - added `excerpt` tube factory to extract the first paragraph of a page
 - added `paginated` method that decorates a list of page contexts with next/prev
+- added an example illustrating both
 
 ## 0.10.0
 
