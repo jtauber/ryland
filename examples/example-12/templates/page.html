@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <p>Site title: {{ site.title }}</p>
+
+  {{ content }}
+
+  <p>Source last modified: {{ source_modified.strftime("%Y-%m-%d") }}</p>
+{% endblock %}
