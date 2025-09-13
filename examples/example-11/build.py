@@ -25,11 +25,14 @@ def collect_tags():
     def inner(ryland: Ryland, context: Dict[str, Any]) -> Dict[str, Any]:
         extra_context = {"tags": []}
         for tag in get_context("frontmatter.tags", [])(context):
-            tag_details = tags.setdefault(tag, {
-                "tag": tag,
-                "url": f"/tag/{tag}/",
-                "pages": [],
-            })
+            tag_details = tags.setdefault(
+                tag,
+                {
+                    "tag": tag,
+                    "url": f"/tag/{tag}/",
+                    "pages": [],
+                },
+            )
             tag_details["pages"].append(
                 ryland.process(
                     context,

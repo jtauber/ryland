@@ -64,7 +64,7 @@ class Ryland:
         else:
             copy(source, self.output_dir / source.name)
 
-    def calc_url(self, arg: dict|str) -> str:
+    def calc_url(self, arg: dict | str) -> str:
         if isinstance(arg, dict):
             url = arg.get("url", "")
         else:
@@ -125,7 +125,9 @@ class Ryland:
             {"url": f"/{markdown_file.stem}/", "template_name": template_name},
         )
 
-    def paginated(self, items: list[dict], fields: Optional[list[str]] = None) -> list[dict]:
+    def paginated(
+        self, items: list[dict], fields: Optional[list[str]] = None
+    ) -> list[dict]:
         def _project(item):
             return project(fields)(self, item) if fields else item
 
