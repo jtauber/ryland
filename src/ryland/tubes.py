@@ -1,19 +1,26 @@
 from pathlib import Path
 from pprint import pprint
 from sys import stderr
-from typing import Dict, Any
+from typing import Dict, Any, Callable, TypeAlias, TYPE_CHECKING
 
 from .helpers import get_context
 
 
-def project(keys: list[str]):
+if TYPE_CHECKING:
+    from .core import Ryland
+
+
+Tube: TypeAlias = Callable[['Ryland', Dict[str, Any]], Dict[str, Any]]
+
+
+def project(keys: list[str]) -> Tube:
     def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
         return {k: context[k] for k in keys if k in context}
 
     return inner
 
 
-def load(source_path: Path):
+def load(source_path: Path) -> Tube:
     def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
         return {
             **context,
@@ -24,7 +31,7 @@ def load(source_path: Path):
     return inner
 
 
-def markdown(frontmatter=False):
+def markdown(frontmatter: bool = False) -> Tube:
     def inner(ryland, context: Dict[str, Any]) -> Dict[str, Any]:
         html_content = ryland._markdown.convert(context["source_content"])
         if frontmatter:
@@ -44,7 +51,7 @@ def markdown(frontmatter=False):
     return inner
 
 
-def debug(pretty=True):
+def debug(pretty: bool = True) -> Tube:
     def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
         if pretty:
             pprint(context, stream=stderr)
