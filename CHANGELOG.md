@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.0
+
+- removed `markdown-full-yaml-metadata` in favour of doing it ourselves (to avoid conflicts with built-in extensions like wikilinks)
+
 ## 0.13.0
 
 - `load` tube now sets `source_modified` with the last modified date of the file

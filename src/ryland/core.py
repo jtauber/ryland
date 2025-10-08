@@ -41,7 +41,7 @@ class Ryland:
         }
 
         self._markdown = markdown_lib.Markdown(
-            extensions=["fenced_code", "codehilite", "tables", "full_yaml_metadata"]
+            extensions=["fenced_code", "codehilite", "tables"]
         )
 
         self.jinja_env = jinja2.Environment(

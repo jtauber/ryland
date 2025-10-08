@@ -5,6 +5,8 @@ from re import search, DOTALL
 from sys import stderr
 from typing import Dict, Any, Callable, TypeAlias, TYPE_CHECKING
 
+import yaml
+
 from .helpers import get_context
 
 
@@ -36,14 +38,17 @@ def load(source_path: Path) -> Tube:
 
 def markdown(frontmatter: bool = False) -> Tube:
     def inner(ryland, context: Dict[str, Any]) -> Dict[str, Any]:
-        html_content = ryland._markdown.convert(context["source_content"])
         if frontmatter:
-            if hasattr(ryland._markdown, "Meta"):
-                extra = {"frontmatter": ryland._markdown.Meta}  # type: ignore
+            if context["source_content"].startswith("---\n"):
+                _, frontmatter_block, source_content = context["source_content"].split("---\n", 2)
+                extra = {"frontmatter": yaml.safe_load(frontmatter_block)}
             else:
                 extra = {"frontmatter": {}}
+                source_content = context["source_content"]
         else:
+            source_content = context["source_content"]
             extra = {}
+        html_content = ryland._markdown.convert(source_content)
         ryland._markdown.reset()
         return {
             **context,
