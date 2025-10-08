@@ -19,6 +19,7 @@ class Ryland:
         output_dir: Optional[Path] = None,
         template_dir: Optional[Path] = None,
         url_root: Optional[str] = None,
+        markdown_extensions: Optional[list[str]] = None,
     ):
         if output_dir is None:
             if root_file is not None:
@@ -32,6 +33,9 @@ class Ryland:
             else:
                 raise ValueError("root_file must be provided if template_dir is not")
 
+        if markdown_extensions is None:
+            markdown_extensions = ["fenced_code", "codehilite", "tables"]
+
         self.output_dir = output_dir
         self.template_dir = template_dir
         self.url_root = url_root or "/"
@@ -40,9 +44,7 @@ class Ryland:
             "HASHES": {},
         }
 
-        self._markdown = markdown_lib.Markdown(
-            extensions=["fenced_code", "codehilite", "tables"]
-        )
+        self._markdown = markdown_lib.Markdown(extensions=markdown_extensions)
 
         self.jinja_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(template_dir)
