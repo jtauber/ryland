@@ -4,7 +4,10 @@ from pprint import pprint
 from re import search, DOTALL
 from sys import stderr
 from typing import Dict, Any, Callable, TypeAlias, TYPE_CHECKING
+from urllib.parse import quote_plus
 
+import markdown as md
+from markdown.extensions.wikilinks import WikiLinkExtension
 import yaml
 
 from .helpers import get_context
@@ -50,6 +53,29 @@ def markdown(frontmatter: bool = False) -> Tube:
             extra = {}
         html_content = ryland._markdown.convert(source_content)
         ryland._markdown.reset()
+        return {
+            **context,
+            **extra,
+            "content": html_content,
+        }
+
+    return inner
+
+
+def _build_wiki_url(label: str, base: str, end: str) -> str:
+    clean_label = quote_plus(label)
+    return '{}{}{}'.format(base, clean_label, end)
+
+
+def obsidian_markdown() -> Tube:
+    def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
+        if context["source_content"].startswith("---\n"):
+            _, frontmatter_block, source_content = context["source_content"].split("---\n", 2)
+            extra = {"frontmatter": yaml.safe_load(frontmatter_block)}
+        else:
+            extra = {"frontmatter": {}}
+            source_content = context["source_content"]
+        html_content = md.markdown(source_content, extensions=[WikiLinkExtension(build_url=_build_wiki_url)])
         return {
             **context,
             **extra,
