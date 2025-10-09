@@ -17,18 +17,19 @@ if TYPE_CHECKING:
     from .core import Ryland
 
 
-Tube: TypeAlias = Callable[["Ryland", Dict[str, Any]], Dict[str, Any]]
+Context: TypeAlias = Dict[str, Any]
+Tube: TypeAlias = Callable[["Ryland", Context], Context]
 
 
 def project(keys: list[str]) -> Tube:
-    def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
+    def inner(_, context: Context) -> Context:
         return {k: context[k] for k in keys if k in context}
 
     return inner
 
 
 def load(source_path: Path) -> Tube:
-    def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
+    def inner(_, context: Context) -> Context:
         return {
             **context,
             "source_path": source_path,
@@ -40,7 +41,7 @@ def load(source_path: Path) -> Tube:
 
 
 def markdown(frontmatter: bool = False) -> Tube:
-    def inner(ryland, context: Dict[str, Any]) -> Dict[str, Any]:
+    def inner(ryland, context: Context) -> Context:
         if frontmatter:
             if context["source_content"].startswith("---\n"):
                 _, frontmatter_block, source_content = context["source_content"].split("---\n", 2)
@@ -68,7 +69,7 @@ def _build_wiki_url(label: str, base: str, end: str) -> str:
 
 
 def obsidian_markdown() -> Tube:
-    def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
+    def inner(_, context: Context) -> Context:
         if context["source_content"].startswith("---\n"):
             _, frontmatter_block, source_content = context["source_content"].split("---\n", 2)
             extra = {"frontmatter": yaml.safe_load(frontmatter_block)}
@@ -86,7 +87,7 @@ def obsidian_markdown() -> Tube:
 
 
 def debug(pretty: bool = True) -> Tube:
-    def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
+    def inner(_, context: Context) -> Context:
         if pretty:
             pprint(context, stream=stderr)
         else:
@@ -97,7 +98,7 @@ def debug(pretty: bool = True) -> Tube:
 
 
 def excerpt() -> Tube:
-    def inner(_, context: Dict[str, Any]) -> Dict[str, Any]:
+    def inner(_, context: Context) -> Context:
         content = get_context("content", "")(context)
         match = search("<p>(.*?)</p>", str(content), DOTALL)
         context["excerpt"] = match.group(1) if match else ""

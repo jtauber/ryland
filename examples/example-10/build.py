@@ -2,10 +2,12 @@
 
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, TypeAlias
 from ryland import Ryland
 from ryland.helpers import get_context
 from ryland.tubes import load, markdown, project, excerpt
+
+Context: TypeAlias = Dict[str, Any]
 
 
 PANTRY_DIR = Path(__file__).parent / "pantry"
@@ -22,7 +24,7 @@ tags = defaultdict(list)
 
 
 def collect_tags():
-    def inner(ryland: Ryland, context: Dict[str, Any]) -> Dict[str, Any]:
+    def inner(ryland: Ryland, context: Context) -> Context:
         for tag in get_context("frontmatter.tags", [])(context):
             tags[tag].append(
                 ryland.process(

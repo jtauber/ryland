@@ -1,6 +1,9 @@
-def get_context(path, default=None):
+from typing import List
+
+
+def get_context(path: str, default=None):
     def inner(context):
-        def _get_nested(obj, keys):
+        def _get_nested(obj, keys: List[str]):
             if not keys or obj is None:
                 return obj
 

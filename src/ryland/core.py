@@ -3,7 +3,7 @@ import json
 from os import makedirs
 from pathlib import Path
 from shutil import copy, copytree, rmtree
-from typing import Any, Optional
+from typing import Any, Dict, Optional, TypeAlias
 
 import jinja2
 import markdown as markdown_lib

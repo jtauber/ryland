@@ -207,10 +207,12 @@ Built-in tube factories in `ryland.tubes` include the follow:
 Developers can write their own tubes or tube factories, for example here to collect pages by tag:
 
 ```python
+Context: TypeAlias = Dict[str, Any]
+
 tags = defaultdict(list)
 
 def collect_tags():
-    def tube(ryland: Ryland, context: Dict[str, Any]) -> Dict[str, Any]:
+    def tube(ryland: Ryland, context: Context) -> Context:
         frontmatter = context["frontmatter"]
         for tag in frontmatter.get("tags", []):
             tags[tag].append(
