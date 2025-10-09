@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.0
+
+- added `obsidian_markdown` tube factory which does the same as `markdown` but handles YAML frontmatter by default and implements wikilinks without slugifying them (per-Obsidian). It will eventually handle other aspects of Obsidian-dialect Markdown.
+
 ## 0.14.0
 
 - removed `markdown-full-yaml-metadata` in favour of doing it ourselves (to avoid conflicts with built-in extensions like wikilinks)

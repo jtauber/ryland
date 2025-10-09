@@ -200,6 +200,7 @@ Built-in tube factories in `ryland.tubes` include the follow:
 
 - `load(source_path: Path)` loads the given path and puts it on the context as `source_path`, the last modified datetime as `source_modified`, and the contents as `source_content`.
 - `markdown(frontmatter=False)` converts the Markdown in `source_content` to HTML and puts it in `content`. Optionally puts the YAML frontmatter in `frontmatter`.
+- `obsidian_markdown()` does the same as `markdown` but handles YAML frontmatter by default and implemented wikilinks without slugifying them (per-Obsidian). It will eventually handle other aspects of Obsidian-dialect Markdown.
 - `excerpt()` extracts the first paragraph of `content` and puts it in `excerpt`.
 - `debug(pretty=True)` outputs the context at that point to stderr (by default pretty-printing it).
 - `project(keys: list[str])` keeps only the listed keys in the context.
@@ -289,6 +290,7 @@ ryland.load_global("site", "site_info.yaml")
 ## Other Projects Building on Ryland
 
 - <https://github.com/jtauber/ryland-blog-template>
+- <https://github.com/jtauber/ryland-obsidian-template>
 
 
 ## Roadmap
