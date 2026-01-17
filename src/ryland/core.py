@@ -3,7 +3,7 @@ import json
 from os import makedirs
 from pathlib import Path
 from shutil import copy, copytree, rmtree
-from typing import Any, Dict, Optional, TypeAlias
+from typing import Any, Callable, Optional
 
 import jinja2
 import markdown as markdown_lib
@@ -53,13 +53,16 @@ class Ryland:
         self.jinja_env.globals["calc_url"] = self.calc_url
         self.jinja_env.filters["markdown"] = self._markdown.convert
 
-    def clear_output(self) -> None:
+    def clear_output(self, exclude: Callable[[Path], bool] = lambda _: False) -> None:
         makedirs(self.output_dir, exist_ok=True)
         for child in self.output_dir.iterdir():
-            if child.is_dir():
-                rmtree(child)
+            if exclude(child):
+                continue
             else:
-                child.unlink()
+                if child.is_dir():
+                    rmtree(child)
+                else:
+                    child.unlink()
 
     def copy_to_output(self, source: Path) -> None:
         if source.is_dir():

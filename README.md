@@ -96,6 +96,13 @@ ryland = Ryland(__file__)
 The `calc_url` function (below) can be helpful in constructing urls that honour this.
 
 
+## Clear Output
+
+`clear_output()` can be called to clear the output directory.
+
+It also takes an optional callable `exclude` which takes a path and returns whether that path should be excluded from being cleared or not.
+
+
 ## Cache-Busting Hashes
 
 The `add_hash` makes it possible to do

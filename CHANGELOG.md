@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.0
+
+- added `exclude` parameter to `clear_output` to exclude certain files or directories from being cleared.
+
 ## 0.15.0
 
 - added `obsidian_markdown` tube factory which does the same as `markdown` but handles YAML frontmatter by default and implements wikilinks without slugifying them (per-Obsidian). It will eventually handle other aspects of Obsidian-dialect Markdown.
