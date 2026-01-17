@@ -279,12 +279,15 @@ If you have a file that contains information that should be available in every t
 ryland.load_global("site", "site_info.yaml")
 ```
 
+
 ## Sites Currently Using Ryland
 
 - <https://projectamaze.com>
 - <https://digitaltolkien.com>
 - <https://jktauber.com>
 - <https://cite.digitaltolkien.com>
+- <https://home.digitaltolkien.com>
+- <https://books.digitaltolkien.com>
 
 
 ## Other Projects Building on Ryland
