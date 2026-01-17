@@ -103,6 +103,16 @@ The `calc_url` function (below) can be helpful in constructing urls that honour 
 It also takes an optional callable `exclude` which takes a path and returns whether that path should be excluded from being cleared or not.
 
 
+## `resize_and_copy`
+
+Whereas `ryland.copy_to_output` just copies a file from the given path to the output directory,
+`resize_and_copy` copies an image file and resizes it to the given dimensions. For example,
+
+```python
+resize_and_copy(path, OUTPUT_DIR / "thumbnails" / path.name, (200, 200))
+```
+
+
 ## Cache-Busting Hashes
 
 The `add_hash` makes it possible to do

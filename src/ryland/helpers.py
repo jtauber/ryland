@@ -1,4 +1,8 @@
+from pathlib import Path
+from shutil import copy
 from typing import List
+
+from PIL import Image
 
 
 def get_context(path: str, default=None):
@@ -21,3 +25,26 @@ def get_context(path: str, default=None):
         return result or default
 
     return inner
+
+
+def resize_and_copy(path: Path, out_path: Path, max_size: tuple[int, int]) -> None:
+    try:
+        if out_path.exists() and out_path.stat().st_mtime >= path.stat().st_mtime:
+            return
+    except OSError:
+        pass
+    ext = path.suffix.lower()
+    if ext in (".svg"):
+        copy(path, out_path)
+    else:
+        try:
+            with Image.open(path) as im:
+                mode = "RGBA" if "A" in im.getbands() else "RGB"
+                if im.mode != mode:
+                    im = im.convert(mode)
+                im.thumbnail(max_size, Image.Resampling.LANCZOS)
+                if ext in (".jpg", ".jpeg") and im.mode == "RGBA":
+                    im = im.convert("RGB")
+                im.save(out_path)
+        except Exception:
+            copy(path, out_path)

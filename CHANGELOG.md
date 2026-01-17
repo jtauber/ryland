@@ -3,6 +3,7 @@
 ## 0.16.0
 
 - added `exclude` parameter to `clear_output` to exclude certain files or directories from being cleared.
+- added `resize_and_copy` which resizes images as it copies them into the output directory.
 
 ## 0.15.0
 
