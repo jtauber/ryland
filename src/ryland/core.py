@@ -96,7 +96,14 @@ class Ryland:
         return self.url_root + url.lstrip("/")
 
     def add_hash(self, filename: str) -> None:
-        self.global_context["HASHES"][filename] = make_hash(self.output_dir / filename)
+        path = self.output_dir / filename
+        if path.is_dir():
+            for child in sorted(path.rglob("*")):
+                if child.is_file():
+                    key = child.relative_to(self.output_dir).as_posix()
+                    self.global_context["HASHES"][key] = make_hash(child)
+        else:
+            self.global_context["HASHES"][filename] = make_hash(path)
 
     def render_template(
         self, template_name: str, output_filename: str, context: Optional[dict] = None
