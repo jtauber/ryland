@@ -76,6 +76,14 @@ class Ryland:
         else:
             copy(source, target)
 
+    def write_output(self, output_filename: str, content: str | bytes) -> Path:
+        output_path = self.output_dir / output_filename
+        makedirs(output_path.parent, exist_ok=True)
+        mode = "wb" if isinstance(content, bytes) else "w"
+        with open(output_path, mode) as f:
+            f.write(content)
+        return output_path
+
     def calc_url(self, arg: dict | str) -> str:
         if isinstance(arg, dict):
             url = arg.get("url", "")
