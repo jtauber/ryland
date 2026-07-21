@@ -165,6 +165,9 @@ class Ryland:
     def load_global(self, key: str, filename: str) -> None:
         self.global_context[key] = load_data(filename)
 
+    def set_global(self, key: str, value: Any) -> None:
+        self.global_context[key] = value
+
 
 def make_hash(path) -> str:
     hasher = md5()
