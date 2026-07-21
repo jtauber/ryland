@@ -66,12 +66,15 @@ class Ryland:
                 else:
                     child.unlink()
 
-    def copy_to_output(self, source: Path) -> None:
+    def copy_to_output(
+        self, source: Path, dest: Optional[str | Path] = None
+    ) -> None:
+        target = self.output_dir / (source.name if dest is None else dest)
+        makedirs(target.parent, exist_ok=True)
         if source.is_dir():
-            dest = self.output_dir / source.name
-            copytree(source, dest, dirs_exist_ok=True)
+            copytree(source, target, dirs_exist_ok=True)
         else:
-            copy(source, self.output_dir / source.name)
+            copy(source, target)
 
     def calc_url(self, arg: dict | str) -> str:
         if isinstance(arg, dict):
