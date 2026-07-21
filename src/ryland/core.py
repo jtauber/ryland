@@ -168,6 +168,12 @@ class Ryland:
     def set_global(self, key: str, value: Any) -> None:
         self.global_context[key] = value
 
+    def add_filter(self, name: str, func: Callable) -> None:
+        self.jinja_env.filters[name] = func
+
+    def add_template_global(self, name: str, value: Any) -> None:
+        self.jinja_env.globals[name] = value
+
 
 def make_hash(path) -> str:
     hasher = md5()
