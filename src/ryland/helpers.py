@@ -22,7 +22,7 @@ def get_context(path: str, default=None):
         keys = path.split(".")
         result = _get_nested(context, keys)
 
-        return result or default
+        return default if result is None else result
 
     return inner
 
