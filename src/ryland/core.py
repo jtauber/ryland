@@ -52,6 +52,7 @@ class Ryland:
         )
         self.jinja_env.globals["data"] = load_data
         self.jinja_env.globals["calc_url"] = self.calc_url
+        self.jinja_env.globals["url_root"] = self.url_root
         self.jinja_env.filters["markdown"] = self._markdown.convert
 
     def clear_output(self, exclude: Callable[[Path], bool] = lambda _: False) -> None:
