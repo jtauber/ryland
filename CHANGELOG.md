@@ -9,6 +9,7 @@
 - added `set_global` to set a computed value in the global template context (complementing `load_global`, which loads from a file)
 - added `add_filter` and `add_template_global` to register custom Jinja2 filters and globals without reaching into `jinja_env`
 - `add_hash` now accepts a directory, hashing every file within it so cache-busting works for whole asset directories (e.g. `js/`)
+- completed internal type annotations; the package now type-checks cleanly under pyright's strict mode (better type information for downstream users)
 
 ## 0.16.0
 

@@ -10,7 +10,7 @@ import markdown as markdown_lib
 import yaml
 
 
-from .tubes import load, markdown, project
+from .tubes import Context, Tube, load, markdown, project
 
 
 class Ryland:
@@ -41,7 +41,7 @@ class Ryland:
         self.template_dir = template_dir
         self.url_root = url_root or "/"
 
-        self.global_context = {
+        self.global_context: dict[str, Any] = {
             "HASHES": {},
         }
 
@@ -50,10 +50,10 @@ class Ryland:
         self.jinja_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(template_dir)
         )
-        self.jinja_env.globals["data"] = load_data
-        self.jinja_env.globals["calc_url"] = self.calc_url
-        self.jinja_env.globals["url_root"] = self.url_root
-        self.jinja_env.filters["markdown"] = self._markdown.convert
+        self.add_template_global("data", load_data)
+        self.add_template_global("calc_url", self.calc_url)
+        self.add_template_global("url_root", self.url_root)
+        self.add_filter("markdown", self._markdown.convert)
 
     def clear_output(self, exclude: Callable[[Path], bool] = lambda _: False) -> None:
         makedirs(self.output_dir, exist_ok=True)
@@ -84,11 +84,8 @@ class Ryland:
             f.write(content)
         return output_path
 
-    def calc_url(self, arg: dict | str) -> str:
-        if isinstance(arg, dict):
-            url = arg.get("url", "")
-        else:
-            url = arg
+    def calc_url(self, arg: dict[str, Any] | str) -> str:
+        url: str = arg.get("url", "") if isinstance(arg, dict) else arg
 
         if url in self.global_context["HASHES"]:
             url = f"{url}?{self.global_context['HASHES'][url]}"
@@ -106,7 +103,7 @@ class Ryland:
             self.global_context["HASHES"][filename] = make_hash(path)
 
     def render_template(
-        self, template_name: str, output_filename: str, context: Optional[dict] = None
+        self, template_name: str, output_filename: str, context: Optional[dict[str, Any]] = None
     ) -> None:
         context = context or {}
         template = self.jinja_env.get_template(template_name)
@@ -122,10 +119,12 @@ class Ryland:
                 )
             )
 
-    def process(self, *tubes) -> dict:
-        context = {}
+    def process(self, *tubes: Tube | Context) -> Context:
+        context: Context = {}
         for tube in tubes:
-            if isinstance(tube, dict):
+            if callable(tube):
+                context = tube(self, context)
+            else:
                 context = {
                     **context,
                     **{
@@ -133,14 +132,12 @@ class Ryland:
                         for key, value in tube.items()
                     },
                 }
-            else:
-                context = tube(self, context)
         return context
 
-    def render(self, *tubes) -> None:
+    def render(self, *tubes: Tube | Context) -> None:
         context = self.process(*tubes)
-        template_name = context["template_name"]
-        output_filename = context["url"].lstrip("/")
+        template_name: str = context["template_name"]
+        output_filename: str = context["url"].lstrip("/")
         if output_filename.endswith("/"):
             output_filename += "index.html"
         self.render_template(template_name, output_filename, context)
@@ -153,9 +150,9 @@ class Ryland:
         )
 
     def paginated(
-        self, items: list[dict], fields: Optional[list[str]] = None
-    ) -> list[dict]:
-        def _project(item):
+        self, items: list[Context], fields: Optional[list[str]] = None
+    ) -> list[Context]:
+        def _project(item: Context) -> Context:
             return project(fields)(self, item) if fields else item
 
         return [
@@ -175,20 +172,20 @@ class Ryland:
     def set_global(self, key: str, value: Any) -> None:
         self.global_context[key] = value
 
-    def add_filter(self, name: str, func: Callable) -> None:
+    def add_filter(self, name: str, func: Callable[..., Any]) -> None:
         self.jinja_env.filters[name] = func
 
     def add_template_global(self, name: str, value: Any) -> None:
         self.jinja_env.globals[name] = value
 
 
-def make_hash(path) -> str:
+def make_hash(path: Path) -> str:
     hasher = md5()
     hasher.update(path.read_bytes())
     return hasher.hexdigest()
 
 
-def load_data(filename) -> Any:
+def load_data(filename: str) -> Any:
     if filename.endswith(".json"):
         return json.load(open(filename))
     elif filename.endswith((".yml", ".yaml")):

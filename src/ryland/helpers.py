@@ -1,13 +1,13 @@
 from pathlib import Path
 from shutil import copy
-from typing import List
+from typing import Any, Callable
 
 from PIL import Image
 
 
-def get_context(path: str, default=None):
-    def inner(context):
-        def _get_nested(obj, keys: List[str]):
+def get_context(path: str, default: Any = None) -> Callable[[dict[str, Any]], Any]:
+    def inner(context: dict[str, Any]) -> Any:
+        def _get_nested(obj: Any, keys: list[str]) -> Any:
             if not keys or obj is None:
                 return obj
 
