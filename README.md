@@ -10,7 +10,9 @@ A simple static site generation library
 - render markdown within data using filter
 - pull data directly from JSON or YAML files within templates
 - copy static files and directory trees (for stylesheets, scripts, fonts, images)
-- generate hash for cache-busting
+- write generated data directly to the output directory
+- generate hash for cache-busting (including whole asset directories)
+- register custom Jinja2 filters and globals
 - built-in and custom compositional context transformations ("tubes") including ability to calculate some context variables from others
 
 
@@ -93,7 +95,7 @@ ryland = Ryland(__file__)
 
 `Ryland` also takes a `url_root` if the generated site will live somewhere other than directly under `/`.
 
-The `calc_url` function (below) can be helpful in constructing urls that honour this.
+The `calc_url` function (below) can be helpful in constructing urls that honour this. The `url_root` is also available directly as a template global (e.g. `{{ url_root }}`) for the cases where `calc_url` doesn't apply.
 
 
 ## Clear Output
@@ -113,6 +115,22 @@ resize_and_copy(path, OUTPUT_DIR / "thumbnails" / path.name, (200, 200))
 ```
 
 
+## Copying and Writing Output
+
+`copy_to_output` copies a file or directory tree into the output directory. By default the copy keeps the source's name; pass `dest` to copy to a subdirectory or under a different name (parent directories are created as needed):
+
+```python
+ryland.copy_to_output(PANTRY_DIR / "logo.png", "images/logo.png")
+```
+
+`write_output` writes a generated string (or `bytes`) straight into the output directory, creating any parent directories and returning the written path (so it composes with `add_hash`):
+
+```python
+ryland.write_output("data/index.json", json.dumps(index))
+ryland.add_hash("data/index.json")
+```
+
+
 ## Cache-Busting Hashes
 
 The `add_hash` makes it possible to do
@@ -128,6 +146,8 @@ Note that `calc_url` (see below) will automatically add the hash if one exists, 
 ```html
 <link rel="stylesheet" href="{{ calc_url('style.css') }}">
 ```
+
+`add_hash` can also be given a directory, in which case every file within it is hashed (keyed by its path relative to the output directory), so `calc_url('js/app.js')` picks up the right hash for each asset.
 
 
 ## Render Markdown Method
@@ -294,6 +314,22 @@ If you have a file that contains information that should be available in every t
 
 ```python
 ryland.load_global("site", "site_info.yaml")
+```
+
+To set a value computed in your build script (rather than loaded from a file), use `set_global`:
+
+```python
+ryland.set_global("build_stats", compute_stats())
+```
+
+
+## Custom Filters and Globals
+
+To make your own Jinja2 filters and globals available in templates without reaching into `jinja_env`:
+
+```python
+ryland.add_filter("commafy", lambda n: f"{n:,}")
+ryland.add_template_global("now", datetime.now)
 ```
 
 

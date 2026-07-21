@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.17.0
+
+- fixed `get_context` so that falsy values (e.g. `0`, `""`, `[]`) are no longer replaced by the default — only a missing key (`None`) is
+- `url_root` is now available as a global in templates (previously only `calc_url` exposed it)
+- `copy_to_output` now takes an optional `dest` to copy to a subdirectory or under a different name (creating parent directories as needed)
+- added `write_output` to write generated strings/bytes directly into the output directory (returns the written path, so it composes with `add_hash`)
+- added `set_global` to set a computed value in the global template context (complementing `load_global`, which loads from a file)
+- added `add_filter` and `add_template_global` to register custom Jinja2 filters and globals without reaching into `jinja_env`
+- `add_hash` now accepts a directory, hashing every file within it so cache-busting works for whole asset directories (e.g. `js/`)
+
 ## 0.16.0
 
 - added `exclude` parameter to `clear_output` to exclude certain files or directories from being cleared.
